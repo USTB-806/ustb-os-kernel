@@ -11,10 +11,13 @@ mod sync;
 mod syscall;
 mod trap;
 mod utils;
-mod batch;
-mod boot;
+mod task;
+mod timer;
+mod app_loader;
+
 
 use crate::utils::console;
+
 
 /// clear BSS segment
 pub fn clear_bss() {
@@ -25,11 +28,16 @@ pub fn clear_bss() {
     (sbss as usize..ebss as usize).for_each(|a| unsafe { (a as *mut u8).write_volatile(0) });
 }
 
-fn main() {
+fn main() -> ! {
     clear_bss();
+    println!("Hello World!");
+    //logging::init();
     mm::init();
-    println!("Hello, world!");
     trap::init();
-    batch::init();
-    batch::run_next_app();
+    app_loader::load_apps();
+    trap::enable_timer_interrupt();
+    timer::set_next_trigger();
+    task::run_first_task();
+    //为什么
+    panic!("Unreachable in rust_main!");    
 }

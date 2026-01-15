@@ -1,45 +1,26 @@
-use riscv::register::sstatus::{self, Sstatus};
-/// Trap Context
+use riscv::register::sstatus::{self, Sstatus, SPP};
+
 #[repr(C)]
+#[derive(Debug)]
+/// trap context structure containing sstatus, sepc and registers
 pub struct TrapContext {
-    /// general regs[0..31]
+    /// General-Purpose Register x0-31
     pub x: [usize; 32],
-    /// CSR sstatus      
+    /// Supervisor Status Register
     pub sstatus: Sstatus,
-    /// CSR sepc
+    /// Supervisor Exception Program Counter
     pub sepc: usize,
 }
 
 impl TrapContext {
-    /// set stack pointer to x_2 reg (sp)
+    /// put the sp(stack pointer) into x\[2\] field of TrapContext
     pub fn set_sp(&mut self, sp: usize) {
         self.x[2] = sp;
     }
-    /// init app context
+    /// init the trap context of an application
     pub fn app_init_context(entry: usize, sp: usize) -> Self {
-        let mut sstatus = sstatus::read();
-        
-        // set SPP to User (0) and SPIE to Enable (1)
-        // SPP is bit 8, SPIE is bit 5
-        unsafe {
-            let sstatus_ptr = &mut sstatus as *mut Sstatus as *mut usize;
-            *sstatus_ptr &= !(1 << 8); // Clear SPP (User)
-            *sstatus_ptr |= 1 << 5;    // Set SPIE (Enable Interrupts)
-        }
-        
-        /*
-            It destroy the purity of a function with side effect. 
-            It would be more intuitive, but we don't recommend it.
-            We just want to create a "To be used in the future" context 
-            but end up changing the CPU mode configuration now.
-
-            unsafe {
-                sstatus::set_spp(sstatus::SPP::User);
-                sstatus::set_spie();
-            }
-            let sstatus = sstatus::read();
-        */
-        
+        let mut sstatus = sstatus::read(); // CSR sstatus
+        sstatus.set_spp(SPP::User); //previous privilege mode: user mode
         let mut cx = Self {
             x: [0; 32],
             sstatus,

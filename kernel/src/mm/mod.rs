@@ -1,12 +1,11 @@
 use buddy_system_allocator::LockedHeap;
 use alloc::vec::Vec;
+use crate::config::KERNEL_HEAP_SIZE;
 
 const HEAP_ORDER: usize = 32; // link list length
 
 #[global_allocator]
 static HEAP_ALLOCATOR: LockedHeap<HEAP_ORDER> = LockedHeap::empty();
-
-const KERNEL_HEAP_SIZE: usize = 0x20_0000;
 
 static mut HEAP_SPACE: [u8; KERNEL_HEAP_SIZE] = [0; KERNEL_HEAP_SIZE];
 

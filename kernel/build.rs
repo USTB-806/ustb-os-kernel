@@ -66,7 +66,7 @@ _num_app:
 
     for (idx, app) in apps.iter().enumerate() {
         println!("app_{}: {}", idx, app);
-        let app_path = target_path.join(app).canonicalize().unwrap();
+        //let app_path = target_path.join(app).canonicalize().unwrap();
         writeln!(
             f,
             r#"
@@ -75,9 +75,9 @@ _num_app:
     .global app_{0}_end
     .align 3
 app_{0}_start:
-    .incbin "{1}"
+    .incbin "{2}{1}"
 app_{0}_end:"#,
-            idx, app_path.to_str().unwrap()
+            idx, app,TARGET_PATH
         )?;
     }
     Ok(())
