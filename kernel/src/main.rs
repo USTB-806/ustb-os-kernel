@@ -40,6 +40,5 @@ fn main() -> ! {
     trap::enable_timer_interrupt();
     timer::set_next_trigger();
     task::run_first_task();
-    //为什么
     panic!("Unreachable in rust_main!");    
 }

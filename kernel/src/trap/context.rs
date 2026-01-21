@@ -20,7 +20,6 @@ impl TrapContext {
     }
     /// init app context
     pub fn app_init_context(entry: usize, sp: usize) -> Self {
-        crate::println!("[kernel] app_init_context: entry={:#x}, sp={:#x}", entry, sp);
         let mut sstatus = sstatus::read();
         
         // set SPP to User (0) and SPIE to Enable (1)

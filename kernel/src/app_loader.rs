@@ -70,12 +70,10 @@ pub fn load_apps() {
     }
     let num_app_ptr = _num_app as usize as *const usize;
     let num_app = get_num_app();
-    println!("[kernel] Loading {} apps", num_app);
     let app_start = unsafe { core::slice::from_raw_parts(num_app_ptr.add(1), num_app + 1) };
     // load apps
     for i in 0..num_app {
         let base_i = get_base_i(i);
-        println!("[kernel] App {} load at {:#x} from {:#x}", i, base_i, app_start[i]);
         // clear region
         (base_i..base_i + APP_SIZE_LIMIT)
             .for_each(|addr| unsafe { (addr as *mut u8).write_volatile(0) });
@@ -93,7 +91,6 @@ pub fn load_apps() {
 
 /// get app info with entry and sp and save  in kernel stack
 pub fn init_app_cx(app_id: usize) -> usize {
-    println!("[kernel] init_app_cx for app {}", app_id);
     let user_stack_top = unsafe { USER_STACK[app_id].get_sp() };
     unsafe {
         let ptr = KERNEL_STACK[app_id].push_context(TrapContext::app_init_context(

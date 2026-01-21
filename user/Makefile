@@ -1,4 +1,4 @@
-build: binary
+build: binary clean
 	python3 build.py
 
 binary:
