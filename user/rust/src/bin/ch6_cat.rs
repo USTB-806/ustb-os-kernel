@@ -28,6 +28,7 @@ pub fn main() -> i32 {
         s.push_str(core::str::from_utf8(&buf[..size]).unwrap());
     }
     println!("{}", s);
+    println!("File cat test passed!");
     close(fd);
     0
 }

@@ -16,7 +16,7 @@ const TESTS: &[&str] = &[
     "ch5_forktest0\0",
     "ch5_forktest1\0",
     "ch5_forktree\0",
-    "ch5_getpid\0"
+    "ch5_getpid\0",
     "ch5_setprio\0",
     "ch5_stride0\0",
     "ch5_stride1\0",

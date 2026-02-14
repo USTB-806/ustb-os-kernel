@@ -4,7 +4,7 @@
 #[macro_use]
 extern crate user_lib;
 
-use user_lib::{exec, fork, wait, yield_};
+use user_lib::{exec, fork, wait, yield_, spawn};
 
 const TESTS: &[&str] = &[
     "ch6_cat\0",
