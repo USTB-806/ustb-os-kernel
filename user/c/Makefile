@@ -27,7 +27,6 @@ $(OUT_DIR)/%: apps/%.c lib.o ../linker.ld | $(OUT_DIR)
 	$(CC) $(CFLAGS) -c $< -o $*.o
 	$(LD) $(LDFLAGS) -o $@ lib.o $*.o
 	$(OBJDUMP) -S $@ > $@.asm
-	$(OBJCOPY) --strip-all -O binary $@ $@
 	@rm -f $*.o
 
 clean:

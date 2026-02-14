@@ -16,7 +16,6 @@ $(OUT_DIR)/%: src/bin/%.rs | $(OUT_DIR)
 	@cargo build --release --bin $*
 	@cp target/riscv64gc-unknown-none-elf/release/$* $@
 	$(OBJDUMP) -S $@ > $@.asm
-	@$(OBJCOPY) --strip-all -O binary $@ $@
 
 clean:
 	@cargo clean
