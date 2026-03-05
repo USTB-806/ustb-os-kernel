@@ -77,42 +77,7 @@ pub fn sys_exec(path: *const u8) -> isize {
 pub fn sys_waitpid(pid: isize, exit_code_ptr: *mut i32) -> isize {
     trace!("kernel::pid[{}] sys_waitpid [{}]", current_task().unwrap().pid.0, pid);
 
-    // TODO(Lab 6): 实现 waitpid 系统调用 —— 等待子进程结束并回收其资源
-    //
-    // 参数：
-    //   pid:           要等待的子进程 pid
-    //                  pid == -1 时等待任意一个子进程
-    //                  pid >  0 时等待指定 pid 的子进程
-    //   exit_code_ptr: 用户态指针，用于存储子进程的退出码
-    //
-    // 返回值：
-    //   -1: 当前进程没有符合条件的子进程
-    //   -2: 有符合条件的子进程但它尚未退出（仍在运行/就绪态）
-    //   >0: 成功回收的子进程的 pid
-    //
-    // 实现步骤：
-    // 1. 通过 current_task() 获取当前进程 TCB，再获取其 inner（独占访问）
-    //
-    // 2. 检查 inner.children 中是否存在 pid 匹配的子进程
-    //    - pid == -1 匹配所有子进程
-    //    - pid > 0  只匹配 getpid() == pid 的子进程
-    //    - 提示: inner.children.iter().any(|p| pid == -1 || pid as usize == p.getpid())
-    //    - 如果没有匹配的子进程，返回 -1
-    //
-    // 3. 在匹配的子进程中查找已变为 Zombie 状态的
-    //    - 使用 inner.children.iter().enumerate().find(|(_, p)| { ... })
-    //    - 通过 p.inner_exclusive_access().is_zombie() 判断是否为僵尸进程
-    //    - 如果没有找到 zombie 子进程，返回 -2
-    //
-    // 4. 找到 zombie 子进程后：
-    //    a. let child = inner.children.remove(idx);  // 从 children 列表中移除
-    //    b. 获取 child.getpid() 作为返回值
-    //    c. 获取 child.inner_exclusive_access().exit_code
-    //    d. 用 translated_refmut(inner.memory_set.token(), exit_code_ptr)
-    //       将退出码写入用户态指针所指向的位置
-    //    e. 返回子进程的 pid
-
-    todo!("Lab 6: implement sys_waitpid")
+    todo!("Lab 5: implement sys_waitpid")
 }
 
 
