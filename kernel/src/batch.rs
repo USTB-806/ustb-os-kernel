@@ -76,20 +76,16 @@ impl AppManager {
             crate::utils::sbi::shutdown();
         }
         println!("[kernel] Loading app_{}", app_id);
+        let app_addr = self.app_start[app_id];
+        let app_size = self.app_start[app_id + 1] - app_addr;
         // clear app area
         core::slice::from_raw_parts_mut(APP_BASE_ADDRESS as *mut u8, APP_SIZE_LIMIT).fill(0);
+        let app_dst = core::slice::from_raw_parts_mut(APP_BASE_ADDRESS as *mut u8, app_size);
+        let app_src = core::slice::from_raw_parts(app_addr as *const u8, app_size);
+        app_dst.copy_from_slice(app_src);
         
-        let app_src = core::slice::from_raw_parts(
-            self.app_start[app_id] as *const u8,
-            self.app_start[app_id + 1] - self.app_start[app_id],
-        );
-        
-        let loader = ElfLoader::new(app_src).expect("Invalid ELF");
-        loader.load_segments(0).expect("Failed to load segments");
-        
-        let args = vec![String::from("app")];
-        let user_sp = loader.init_stack(0, USER_STACK.get_sp(), args);
-        let entry = loader.elf.header.pt2.entry_point() as usize;
+        let entry = APP_BASE_ADDRESS;
+        let user_sp = USER_STACK.get_sp();
         
         // Memory fence about fetching the instruction memory
         asm!("fence.i");
